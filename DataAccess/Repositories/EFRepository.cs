@@ -29,10 +29,6 @@ namespace DataAccess.Repositories
             return entities;
         }
 
-        public Task<IEnumerable<T>> GetByCondition(Func<T, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<T> GetByIdAsync(int id)
         {

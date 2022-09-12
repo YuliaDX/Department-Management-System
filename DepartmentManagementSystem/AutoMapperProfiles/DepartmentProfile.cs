@@ -8,7 +8,7 @@ namespace DepartmentManagementSystem.AutoMapperProfiles
     {
         public DepartmentProfile()
         {
-            CreateMap<Department, DepartmentShortResponse>();
+            CreateMap<Department, DepartmentResponse>();
             CreateMap<CreateOrEditDepartmentRequest, Department> ();
         }
     }

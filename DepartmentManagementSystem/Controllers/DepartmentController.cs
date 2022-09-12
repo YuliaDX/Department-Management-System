@@ -20,10 +20,10 @@ namespace DepartmentManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<DepartmentShortResponse>> GetDepartmentsAsync()
+        public async Task<ActionResult<DepartmentResponse>> GetDepartmentsAsync()
         {
             var departments = await _departmentRepository.GetAllAsync();
-            var departmentModelList = departments.Select(x => _mapper.Map<DepartmentShortResponse>(x));
+            var departmentModelList = departments.Select(x => _mapper.Map<DepartmentResponse>(x));
             return Ok(departmentModelList);
 
         }

@@ -10,17 +10,18 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Data
 {
-    public static class ExcelDocumentReader
+    public class ExcelDocumentReader
     {
-        public static List<Department> Read(string path)
+        public Task ReadAsync(string path)
         {
             using(Workbook wb = new Workbook())
             {
                 wb.LoadDocument(path);
                 DataTable dt = GetData(wb.Worksheets.First());
-                
-                return InitData(dt);
+
+                DataFactory.Fill(dt);
             }
+            return Task.CompletedTask;
         }
         private static DataTable GetData(Worksheet worksheet)
         {
@@ -30,33 +31,7 @@ namespace DataAccess.Data
             exporter.Export();
             return dataTable;
         }
-        private static List<Department> InitData(DataTable dataTable)
-        {
-            if (dataTable.Rows.Count == 0) return null;
-
-            int deptId = 0;
-            int userId = 0;
-            List<Department> departments = new List<Department>();
-            foreach(DataRow dataRow in dataTable.Rows)
-            {
-                string deptName = dataRow["Отдел"].ToString().Trim();
-                Department? department = departments.Find(dept => dept.Name == deptName);
-                if (department == null)
-                {
-                    Department dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, userId);
-                    departments.Add(dept);
-                    deptId++;
-                    userId++;
-                }
-                else
-                {
-                    DataRowToDepartmentObjectMapper.AddUser(dataRow, department, userId);
-                    userId++;
-                }
-               
-            }
-            return departments;
-        }
+      
     }
 
   

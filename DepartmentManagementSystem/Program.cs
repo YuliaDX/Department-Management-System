@@ -1,6 +1,7 @@
 using AutoMapper;
 using Core.Domain;
 using Core.Interfaces;
+using DataAccess.Data;
 using DataAccess.Repositories;
 using DepartmentManagementSystem.AutoMapperProfiles;
 using DepartmentManagementSystem.Controllers;
@@ -10,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 services.AddControllers();
-services.AddScoped(typeof(IRepository<Department>), typeof(InMemoryRepository<Department>));
-services.AddScoped(typeof(IRepository<User>), typeof(InMemoryRepository<User>));
+services.AddScoped(typeof(IRepository<Department>), (x=> new InMemoryRepository<Department>(DataFactory.Departments)));
 
 services.AddAutoMapper(new[] {typeof(DepartmentProfile), typeof(UserProfile) } );
 
