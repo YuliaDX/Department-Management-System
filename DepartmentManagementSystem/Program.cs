@@ -5,6 +5,7 @@ using DataAccess.Data;
 using DataAccess.Repositories;
 using DepartmentManagementSystem.AutoMapperProfiles;
 using DepartmentManagementSystem.Controllers;
+using DepartmentManagementSystem.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,11 @@ var services = builder.Services;
 services.AddControllers();
 services.AddScoped(typeof(IRepository<Department>), (x=> new InMemoryRepository<Department>(DataFactory.Departments)));
 
-services.AddAutoMapper(new[] {typeof(DepartmentProfile), typeof(UserProfile) } );
+services.AddAutoMapper((config) =>
+{
+    config.AddProfile<DepartmentProfile>();
+    config.AddProfile<UserProfile>();
+} );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

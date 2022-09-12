@@ -8,7 +8,8 @@ namespace DepartmentManagementSystem.AutoMapperProfiles
     {
         public DepartmentProfile()
         {
-            CreateMap<Department, DepartmentResponse>();
+            CreateMap<Department, DepartmentResponse>().
+                ForMember(dest => dest.ParentDepartment, opt => opt.MapFrom(new CustomResolver()));
             CreateMap<CreateOrEditDepartmentRequest, Department> ();
         }
     }
