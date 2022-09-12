@@ -5,7 +5,7 @@
         public string Name { get; set; }
         public virtual ICollection<User> Users { get; set; }
 
-        public Department ParentDepartment { get; set; }
+        public virtual Department ParentDepartment { get; set; }
         public int? ParentDepartmentId { get; set; }
         public virtual ICollection<Department> SubDepartments { get; set; }
     }

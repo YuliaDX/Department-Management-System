@@ -3,6 +3,8 @@ using Core.Domain;
 using Core.Interfaces;
 using DepartmentManagementSystem.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using DepartmentManagementSystem.Extensions;
 
 namespace DepartmentManagementSystem.Controllers
 {
@@ -27,20 +29,22 @@ namespace DepartmentManagementSystem.Controllers
             return Ok(departmentModelList);
 
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DepartmentResponse>> GetDepartmentByIdAsync(int id)
+        [HttpGet("{parentId}")]
+        public async Task<ActionResult<DepartmentResponse>> GetDepartmentByIdAsync(int parentId)
         {
-            var department = await _departmentRepository.GetByIdAsync(id);
-            if (department == null)
+            Expression<Func<Department, bool>> expression = x => x.ParentDepartmentId == parentId;
+            var departmentList = await _departmentRepository.GetByConditionAsync(expression);
+            if (departmentList.Count() == 0)
                 return NotFound();
 
-            DepartmentResponse departmentModel = _mapper.Map<DepartmentResponse>(department);
-            return Ok(departmentModel);
+            var departmentModelList = departmentList.Select(x => _mapper.Map<DepartmentResponse>(x));
+            return Ok(departmentModelList);
         }
         [HttpPost]
         public async Task<IActionResult> CreateDepartmentAsync(CreateOrEditDepartmentRequest model)
         {
             var department = _mapper.Map<Department>(model);
+            //TODO check department.ID and user.DepartmentId
             await _departmentRepository.AddAsync(department);
 
             return CreatedAtAction(
@@ -74,25 +78,30 @@ namespace DepartmentManagementSystem.Controllers
             await _departmentRepository.RemoveAsync(department);
             return NoContent();
         }
-        [HttpGet("{id}/users")]
-        public async Task<ActionResult<UserResponse>> GetUsersByDepartmentAsync(int departmentId)
+        [HttpGet("/summary")]
+        public async Task<ActionResult<SummaryResponse>> GetUsersAndPositionsByDepartmentAsync()
         {
-            var department = await _departmentRepository.GetByIdAsync(departmentId);
-            if (department == null)
-                return NotFound();
+            var departmentList = await _departmentRepository.GetAllAsync();
 
-            var userPerDepartmentList = department.Users.Select(user => _mapper.Map<UserResponse>(user));
-            return Ok(userPerDepartmentList);
-        }
-        [HttpGet("{id}/positions")]
-        public async Task<ActionResult<UserResponse>> GetPositionsByDepartmentAsync(int departmentId)
-        {
-            var department = await _departmentRepository.GetByIdAsync(departmentId);
-            if (department == null)
-                return NotFound();
+            List<SummaryResponse> summaryResponse = new List<SummaryResponse>();
+            foreach (var rootDepartment in departmentList)
+            {
+                int usersCount = 0;
+                int positionsCount = 0;
+                rootDepartment.BypassTrees((d) => {
+                    usersCount += d.Users.Count;
+                    positionsCount += d.Users.Select(u=> u.Position).Distinct().Count();
+                });
+                summaryResponse.Add(new SummaryResponse()
+                {
+                    DepartmentName = rootDepartment.Name,
+                    UsersCount = usersCount,
+                    PositionsCount = positionsCount
+                }); ;
+            }
 
-            var positionPerDepartmentList = department.Users.Select(user => user.Position).ToList();
-            return Ok(positionPerDepartmentList);
+            return Ok(summaryResponse);
         }
+        
     }
 }

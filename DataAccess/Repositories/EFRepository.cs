@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,11 @@ namespace DataAccess.Repositories
             await _dataContext.Set<T>().AddAsync(item);
             await _dataContext.SaveChangesAsync();
         }
+        public async Task AddRangeAsync(IEnumerable<T> items)
+        {
+            await _dataContext.Set<T>().AddRangeAsync(items);
+            await _dataContext.SaveChangesAsync();
+        }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
@@ -29,6 +35,11 @@ namespace DataAccess.Repositories
             return entities;
         }
 
+        public async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> predicate)
+        {
+            var entities = await _dataContext.Set<T>().Where(predicate).ToListAsync();
+            return entities;
+        }
 
         public async Task<T> GetByIdAsync(int id)
         {

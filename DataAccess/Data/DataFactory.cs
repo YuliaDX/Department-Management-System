@@ -28,13 +28,14 @@ namespace DataAccess.Data
         {
             if (dataTable.Rows.Count == 0) return false;
 
-            int deptId = 0;
-            int userId = 0;
+            int deptId = 1;
+            int userId = 1;
+
             Departments.Clear();
             foreach (DataRow dataRow in dataTable.Rows)
             {
                 string deptName = dataRow["Отдел"].ToString().Trim();
-                Department? department = departments.Find(dept => dept.Name == deptName);
+                Department? department = Departments.Find(dept => dept.Name == deptName);
                 if (department == null)
                 {
                     string parentDeptName = dataRow["Родительский Отдел"].ToString().Trim();
@@ -42,7 +43,7 @@ namespace DataAccess.Data
                     Department dept = null;
                     if (!string.IsNullOrEmpty(parentDeptName))
                     {
-                        parentDepartment = departments.Find(dept => dept.Name == parentDeptName);
+                        parentDepartment = Departments.Find(dept => dept.Name == parentDeptName);
                         if (parentDepartment == null)
                         {
                             parentDepartment = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, parentDeptName,
@@ -50,10 +51,12 @@ namespace DataAccess.Data
                             deptId++;
                         }
                         dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, deptName, parentDepartment, userId);
+                        parentDepartment.SubDepartments ??= new List<Department>();
+                        parentDepartment.SubDepartments.Add(dept);
                     }
                     else
                         dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, deptName, null, userId);
-                    departments.Add(dept);
+                    Departments.Add(dept);
                     deptId++;
                     userId++;
                 }

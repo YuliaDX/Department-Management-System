@@ -34,7 +34,8 @@ namespace DepartmentManagementSystem.Controllers
             string result = Path.Combine(docPath, fileName);
             ExcelDocumentReader reader = new ExcelDocumentReader();
             await reader.ReadAsync(result);
-           // await (_departmentRepository as InMemoryRepository<Department>).FillAsync(DataFactory.Departments);
+
+            await _departmentRepository.AddRangeAsync(DataFactory.Departments);
             return Ok();
         }
     }

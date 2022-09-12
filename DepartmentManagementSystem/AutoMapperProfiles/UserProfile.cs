@@ -9,6 +9,7 @@ namespace DepartmentManagementSystem.AutoMapperProfiles
         public UserProfile()
         {
             CreateMap<User, UserResponse>();
+            CreateMap<CreateUserRequest, User>();
         }
     }
 }

@@ -3,6 +3,7 @@ using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,6 @@ namespace DataAccess.Repositories
         {
             Data = data;
         }
-
         public Task<IEnumerable<T>> GetAllAsync()
         {
             return Task.FromResult(Data);
@@ -52,8 +52,16 @@ namespace DataAccess.Repositories
 
             return Task.CompletedTask;
         }
-      
 
+        public Task AddRangeAsync(IEnumerable<T> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
