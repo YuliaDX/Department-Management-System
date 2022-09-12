@@ -74,5 +74,25 @@ namespace DepartmentManagementSystem.Controllers
             await _departmentRepository.RemoveAsync(department);
             return NoContent();
         }
+        [HttpGet("{id}/users")]
+        public async Task<ActionResult<UserResponse>> GetUsersByDepartmentAsync(int departmentId)
+        {
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
+            if (department == null)
+                return NotFound();
+
+            var userPerDepartmentList = department.Users.Select(user => _mapper.Map<UserResponse>(user));
+            return Ok(userPerDepartmentList);
+        }
+        [HttpGet("{id}/positions")]
+        public async Task<ActionResult<UserResponse>> GetPositionsByDepartmentAsync(int departmentId)
+        {
+            var department = await _departmentRepository.GetByIdAsync(departmentId);
+            if (department == null)
+                return NotFound();
+
+            var positionPerDepartmentList = department.Users.Select(user => user.Position).ToList();
+            return Ok(positionPerDepartmentList);
+        }
     }
 }
