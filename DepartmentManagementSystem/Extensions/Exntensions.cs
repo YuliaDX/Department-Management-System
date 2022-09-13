@@ -9,7 +9,6 @@ namespace DepartmentManagementSystem.Extensions
 		
 		{
 			var stack = new Stack<Department>();
-			//foreach (var node in nodes)
 			{
 				stack.Push(node);
 				while (stack.Any())

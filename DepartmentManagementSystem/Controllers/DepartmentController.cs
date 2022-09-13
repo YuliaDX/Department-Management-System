@@ -44,13 +44,9 @@ namespace DepartmentManagementSystem.Controllers
         public async Task<IActionResult> CreateDepartmentAsync(CreateOrEditDepartmentRequest model)
         {
             var department = _mapper.Map<Department>(model);
-            //TODO check department.ID and user.DepartmentId
             await _departmentRepository.AddAsync(department);
 
-            return CreatedAtAction(
-             nameof(GetDepartmentByIdAsync),
-             new { id = department.Id },
-             null);
+            return Ok(department.Id);
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDepartmentAsync(int id, CreateOrEditDepartmentRequest model)
@@ -81,8 +77,13 @@ namespace DepartmentManagementSystem.Controllers
         [HttpGet("/summary")]
         public async Task<ActionResult<SummaryResponse>> GetUsersAndPositionsByDepartmentAsync()
         {
-            var departmentList = await _departmentRepository.GetAllAsync();
+            IEnumerable<Department> departmentList = await _departmentRepository.GetAllAsync();
+            List<SummaryResponse> summaryResponse = GetSummary(departmentList);
 
+            return Ok(summaryResponse);
+        }
+        private List<SummaryResponse> GetSummary(IEnumerable<Department> departmentList)
+        {
             List<SummaryResponse> summaryResponse = new List<SummaryResponse>();
             foreach (var rootDepartment in departmentList)
             {
@@ -90,7 +91,7 @@ namespace DepartmentManagementSystem.Controllers
                 int positionsCount = 0;
                 rootDepartment.BypassTrees((d) => {
                     usersCount += d.Users.Count;
-                    positionsCount += d.Users.Select(u=> u.Position).Distinct().Count();
+                    positionsCount += d.Users.Select(u => u.Position).Distinct().Count();
                 });
                 summaryResponse.Add(new SummaryResponse()
                 {
@@ -99,8 +100,7 @@ namespace DepartmentManagementSystem.Controllers
                     PositionsCount = positionsCount
                 }); ;
             }
-
-            return Ok(summaryResponse);
+            return summaryResponse;
         }
         
     }

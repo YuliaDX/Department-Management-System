@@ -13,7 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 services.AddControllers();
-//services.AddScoped(typeof(IRepository<Department>), (x=> new InMemoryRepository<Department>(DataFactory.Departments)));
 services.AddScoped(typeof(IRepository<Department>), typeof(EFRepository<Department>));
 services.AddAutoMapper((config) =>
 {
@@ -32,8 +31,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-//dbInitializer.Initialize();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

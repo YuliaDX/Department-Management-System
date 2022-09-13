@@ -10,28 +10,24 @@ namespace DataAccess.Data
 {
     public static class DataRowToDepartmentObjectMapper
     {
-        public static Department Create(DataRow row, int id, string deptName,
-            Department parentDepartment, int? userId = null)
+        public static Department Create(DataRow row, string deptName,
+            Department parentDepartment, bool hasUser)
         {
             Department dept = new Department();
-            dept.Id = id;
             dept.Users = new List<User>();
             dept.Name = deptName;
             dept.ParentDepartment = parentDepartment;
-            dept.ParentDepartmentId = parentDepartment?.Id;
 
-            if (userId != null)
-                AddUser(row, dept, (int)userId );
+            if (hasUser)
+                AddUser(row, dept);
             
             return dept;
         }
-        public static bool AddUser(DataRow row, Department department, int userId)
+        public static bool AddUser(DataRow row, Department department)
         {
             User user = new User();
-            user.Id = userId;
             user.FullName = row["Пользователь"].ToString();
             user.Position = row["Должность"].ToString();
-            user.DepartmentId = department.Id;
             department.Users.Add(user);
             return true;
         }

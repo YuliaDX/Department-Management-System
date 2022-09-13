@@ -13,7 +13,8 @@ namespace DataAccess
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=department-management-db;Username=postgres;Password=docker");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=department-management-db;Username=postgres;" +
+                "Password=docker;Include Error Detail = true");
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseLazyLoadingProxies();
 
@@ -25,10 +26,17 @@ namespace DataAccess
             {
                 entity.HasKey(e => e.Id);
             });
+            modelBuilder.Entity<Department>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id);
             });
+            modelBuilder.Entity<User>()
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
         }
     }
 }

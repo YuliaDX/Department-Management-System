@@ -25,9 +25,4 @@
     <Folder Include="App_Data\docs\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="docker-compose.dcproj" />
-    <None Include="docker-compose.dcproj.user" />
-  </ItemGroup>
-
 </Project>

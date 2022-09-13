@@ -28,9 +28,6 @@ namespace DataAccess.Data
         {
             if (dataTable.Rows.Count == 0) return false;
 
-            int deptId = 1;
-            int userId = 1;
-
             Departments.Clear();
             foreach (DataRow dataRow in dataTable.Rows)
             {
@@ -46,24 +43,21 @@ namespace DataAccess.Data
                         parentDepartment = Departments.Find(dept => dept.Name == parentDeptName);
                         if (parentDepartment == null)
                         {
-                            parentDepartment = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, parentDeptName,
-                                null, null);
-                            deptId++;
+                            parentDepartment = DataRowToDepartmentObjectMapper.Create(dataRow, parentDeptName,
+                                null, false);
+                           
                         }
-                        dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, deptName, parentDepartment, userId);
+                        dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptName, parentDepartment, true);
                         parentDepartment.SubDepartments ??= new List<Department>();
                         parentDepartment.SubDepartments.Add(dept);
                     }
                     else
-                        dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptId, deptName, null, userId);
+                        dept = DataRowToDepartmentObjectMapper.Create(dataRow, deptName, null, true);
                     Departments.Add(dept);
-                    deptId++;
-                    userId++;
                 }
                 else
                 {
-                    DataRowToDepartmentObjectMapper.AddUser(dataRow, department, userId);
-                    userId++;
+                    DataRowToDepartmentObjectMapper.AddUser(dataRow, department);
                 }
 
             }
