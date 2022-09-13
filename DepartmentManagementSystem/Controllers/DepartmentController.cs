@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Domain;
 using Core.Interfaces;
 using DepartmentManagementSystem.DTO;
@@ -29,6 +29,9 @@ namespace DepartmentManagementSystem.Controllers
             return Ok(departmentModelList);
 
         }
+        ///<summary>
+        /// Получение отделов по одному уровню для родительского отдела, заданного фильтром parentId
+        ///</summary>
         [HttpGet("{parentId}")]
         public async Task<ActionResult<DepartmentResponse>> GetDepartmentByIdAsync(int parentId)
         {
@@ -74,6 +77,9 @@ namespace DepartmentManagementSystem.Controllers
             await _departmentRepository.RemoveAsync(department);
             return NoContent();
         }
+        ///<summary>
+        /// эндпоинт для вывода информации по количеству сотрудников в каждом отделе и количеству позиций в этом отделе.
+        ///</summary>
         [HttpGet("/summary")]
         public async Task<ActionResult<SummaryResponse>> GetUsersAndPositionsByDepartmentAsync()
         {

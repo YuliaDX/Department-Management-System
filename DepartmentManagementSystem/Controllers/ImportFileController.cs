@@ -25,6 +25,9 @@ namespace DepartmentManagementSystem.Controllers
             _webHostEnvironment = webHostEnvironment;
             this._departmentRepository = departmentRepository;
         }
+        ///<summary>
+        /// эндпоинт для импорта оргструктуры из таблицы excel
+        ///</summary>
         [HttpGet]
         public async Task<IActionResult> Import()
         {
