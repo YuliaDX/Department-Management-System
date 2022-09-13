@@ -13,4 +13,5 @@ Initial structure of deparments and users is stored in an Excel file (.XLSX). Th
 # Implementation Details
 
 The **Departments** Controller has CRUD actions for the Department entities. Also, the controller has the GetDepartmentsByIdAsync(parentId) method that returns sub-departments for the specified main department and the GetUsersAndPositionsByDepartmentAsync() method that returns information about all the departments.
+
 The **ImportFile** Controller has an endpoint for importing data from an Excel file located in the "/App_Data/docs" folder.
