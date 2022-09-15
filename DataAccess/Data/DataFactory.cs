@@ -10,19 +10,7 @@ namespace DataAccess.Data
 {
     public static class DataFactory
     {
-        private static List<Department> departments;
-
-        public static List<Department> Departments
-        {
-            get
-            {
-                if (departments == null)
-                    departments = new List<Department>();
-                return departments;
-            }
-
-            private set => departments = value;
-        }
+        public static List<Department> Departments { get;  private set; } = new List<Department>();
 
         public static bool Fill(DataTable dataTable)
         {
